@@ -6,7 +6,7 @@ const app = express();
 const mongoose = require("./database/mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -18,8 +18,17 @@ const User = require("./database/models/user");
 const Ticket = require("./database/models/ticket");
 app.use(express.json());
 
+//elasticsearch connection
+const esClient = require("./elasticsearch");
+
 // setting CORS : backend :3000 frontend: 4200
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:4200"], // Frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -118,7 +127,7 @@ app.get("/api/users", async (req, res) => {
     const users = await User.find();
     res.status(200).send(users);
   } catch (error) {
-    res.status
+    res
       .status(500)
       .send({ error: "Unable to fetch users. Please try again later." });
   }
@@ -192,6 +201,32 @@ app.get("/api/tickets/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+// searching ticket using elasticsearch
+app.get("/api/tickets/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const result = await esClient.search({
+      index: "tickets",
+      body: {
+        query: {
+          multi_match: {
+            query: query,
+            fields: ["name", "issuer", "description", "status"],
+          },
+        },
+      },
+    });
+
+    const tickets = result.hits.hits.map((hit) => hit._source);
+    res.status(200).send(tickets);
+  } catch (error) {
+    console.error("Error searching tickets:", error);
+    res.status(500).send({ error: "Unable to search tickets" });
+  }
+});
+
 app.put("/api/tickets/:id", async (req, res) => {
   try {
     const ticket = await Ticket.findByIdAndUpdate(req.params.id, req.body, {
@@ -246,6 +281,6 @@ app.get("/api/tickets/search", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("Server is running on port 3000");
 });
