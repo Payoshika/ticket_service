@@ -2,6 +2,8 @@ const { Client } = require("@elastic/elasticsearch");
 
 const esClient = new Client({
   node: "http://elasticsearch:9200", // Use the service name from docker-compose
+  maxRetries: 5, // Retry up to 5 times
+  requestTimeout: 60000, // Wait up to 60 seconds for a response
 });
 
 esClient.ping({}, (error) => {

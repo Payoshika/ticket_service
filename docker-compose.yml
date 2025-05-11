@@ -9,7 +9,7 @@ services:
     depends_on:
       - mongo
       - elasticsearch
-  
+    command: ["npm", "start"] # This runs the "start" script from package.json
   mongo:
     image: mongo:6
     ports:
@@ -30,7 +30,19 @@ services:
       memlock:
         soft: -1
         hard: -1
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
 volumes:
   mongo-data:
   es-data:

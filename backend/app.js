@@ -180,6 +180,7 @@ app.post("/api/tickets", async (req, res) => {
     res.status(400).send(error);
   }
 });
+
 app.get("/api/tickets", async (req, res) => {
   try {
     const tickets = await Ticket.find();
@@ -190,6 +191,38 @@ app.get("/api/tickets", async (req, res) => {
       .send({ error: "Unable to fetch tickets. Please try again later." });
   }
 });
+
+// searching ticket using elasticsearch
+app.get("/api/tickets/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+    console.log("Search query:", query); // Log the search query
+
+    const result = await esClient.search({
+      index: "tickets",
+      body: {
+        query: {
+          bool: {
+            should: [
+              { wildcard: { name: `*${query}*` } },
+              { wildcard: { issuerName: `*${query}*` } },
+              { wildcard: { description: `*${query}*` } },
+              { wildcard: { status: `*${query}*` } },
+            ],
+          },
+        },
+      },
+    });
+    console.log("Elasticsearch result:", result); // Log the Elasticsearch response
+
+    const tickets = result.hits.hits.map((hit) => hit._source);
+    res.status(200).send(tickets);
+  } catch (error) {
+    console.error("Error searching tickets:", error);
+    res.status(500).send({ error: "Unable to search tickets" });
+  }
+});
+
 app.get("/api/tickets/:id", async (req, res) => {
   try {
     const ticket = await Ticket.findById(req.params.id);
@@ -199,31 +232,6 @@ app.get("/api/tickets/:id", async (req, res) => {
     res.status(200).send(ticket);
   } catch (error) {
     res.status(500).send(error);
-  }
-});
-
-// searching ticket using elasticsearch
-app.get("/api/tickets/search", async (req, res) => {
-  try {
-    const { query } = req.query;
-
-    const result = await esClient.search({
-      index: "tickets",
-      body: {
-        query: {
-          multi_match: {
-            query: query,
-            fields: ["name", "issuer", "description", "status"],
-          },
-        },
-      },
-    });
-
-    const tickets = result.hits.hits.map((hit) => hit._source);
-    res.status(200).send(tickets);
-  } catch (error) {
-    console.error("Error searching tickets:", error);
-    res.status(500).send({ error: "Unable to search tickets" });
   }
 });
 
@@ -248,34 +256,6 @@ app.delete("/api/tickets/:id", async (req, res) => {
       return res.status(404).send();
     }
     res.status(200).send(ticket);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// searching ticket by user
-// search by name, issuer, description, and status and createdAt
-app.get("/api/tickets/search", async (req, res) => {
-  try {
-    const { name, issuer, description, status, createdAt } = req.query;
-    const query = {};
-    if (name) {
-      query.name = { $regex: name, $options: "i" };
-    }
-    if (issuer) {
-      query.issuer = { $regex: issuer, $options: "i" };
-    }
-    if (description) {
-      query.description = { $regex: description, $options: "i" };
-    }
-    if (status) {
-      query.status = { $regex: status, $options: "i" };
-    }
-    if (createdAt) {
-      query.createdAt = { $regex: createdAt, $options: "i" };
-    }
-    const tickets = await Ticket.find(query);
-    res.status(200).send(tickets);
   } catch (error) {
     res.status(500).send(error);
   }
