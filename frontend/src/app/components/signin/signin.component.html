@@ -1,0 +1,38 @@
+<div class="signin">
+  <h3>Signin</h3>
+  <form (ngSubmit)="onSubmit(signinForm)" #signinForm="ngForm">
+    <div>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+      />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+      />
+    </div>
+    <button type="submit">Signin</button>
+  </form>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </div>
+  <div>
+    <p>
+      Don't have an account?
+      <a routerLink="/signup"><strong>Signup here</strong></a>
+    </p>
+  </div>
+</div>

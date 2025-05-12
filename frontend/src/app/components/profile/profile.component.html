@@ -1,0 +1,17 @@
+<div>
+  <h2>profile</h2>
+  <ul *ngIf="userData; else loadingOrError">
+    <li>ID: {{ userData._id }}</li>
+    <li>Name: {{ userData.name }}</li>
+    <li>Email: {{ userData.email }}</li>
+    <li>Created At: {{ userData.createdAt }}</li>
+  </ul>
+  <ng-template #loadingOrError>
+    <div *ngIf="errorMessage; else loading">
+      <p>Error: {{ errorMessage }}</p>
+    </div>
+    <ng-template #loading>
+      <p>Loading...</p>
+    </ng-template>
+  </ng-template>
+</div>

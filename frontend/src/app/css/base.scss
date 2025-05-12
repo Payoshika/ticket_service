@@ -1,0 +1,36 @@
+// all the variables
+$background-color: #fcfaf1;
+$background-color-light: #f8f8f8;
+$text-color: #3a3e46;
+
+$smartphone-max-width: 900px;
+
+/* box sizing */
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* base font */
+  font-size: 62.5%;
+  font-family: "Helvetica", "Inter";
+}
+
+body {
+  /* base color */
+  background-color: $background-color;
+  color: $text-color;
+  font-size: 1.6rem; // 16px
+  img {
+    object-fit: cover;
+    width: 100%;
+  }
+}
+
+router-outlet {
+  display: none;
+}

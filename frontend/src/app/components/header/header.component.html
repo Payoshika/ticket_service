@@ -1,0 +1,15 @@
+<h1>Ticket Service</h1>
+<div class="nav-content">
+  <a routerLink="/signin" *ngIf="!authService.isLoggedIn()"
+    ><strong>signin</strong></a
+  >
+  <a routerLink="/signup" *ngIf="!authService.isLoggedIn()"
+    ><strong>signup</strong></a
+  >
+  <a (click)="authService.logout()" *ngIf="authService.isLoggedIn()"
+    ><strong>logout</strong></a
+  >
+  <a routerLink="/tickets" *ngIf="!router.url.includes('/tickets')"
+    ><strong>tickets</strong></a
+  >
+</div>

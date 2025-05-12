@@ -17,6 +17,21 @@ services:
     volumes:
       - mongo-data:/data/db
   
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "4200:4200"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - API_URL=http://backend:3000/api # Use the backend service name
+  #   depends_on:
+  #     - backend
+  #   volumes:
+  #     - ./frontend:/usr/src/app # Mount the frontend directory for live
+  #   platform: linux/amd64 # Force the use of amd64 architecture
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
     environment:

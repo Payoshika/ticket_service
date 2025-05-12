@@ -1,0 +1,232 @@
+@use "base" as *;
+@use "mixins" as *;
+
+// create grid system
+.container {
+  display: grid;
+  @include Padding2rem;
+  //make 12 columns in a row with name to each col
+  grid-template-columns: repeat(12, 1fr);
+  //make rows for min-content
+  grid-auto-rows: min-content;
+  padding: 2rem;
+  min-height: 100vh;
+  max-width: 140rem;
+  margin: 0 auto;
+  > app-ticket-view,
+  app-signin,
+  app-signup {
+    grid-column: 1 / -1;
+    @include Padding2rem;
+  }
+}
+.ticket-view {
+  width: 100%;
+  @include Padding5rem;
+  @include smartphone {
+    @include Padding3rem;
+  }
+  @include ColJustifyCenterFlexbox;
+  h3 {
+    @include MarginBottom3rem;
+  }
+  .ticket-table {
+    width: 100%;
+    @include Padding2rem;
+    @include BoxShadow;
+  }
+  .analytics-table {
+    width: 100%;
+    @include Padding2rem;
+    @include BoxShadow;
+  }
+}
+.tabs {
+  @include RowJustifyCenterFlexbox;
+}
+.active-tab {
+  background-color: $text-color; /* Default background color for active tab */
+  color: white;
+}
+.inactive-tab {
+  background-color: $background-color; /* Different background color for inactive tab */
+  color: $text-color;
+}
+.actions {
+  @include RowJustifySpaceBetweenFlexbox;
+  gap: 2rem;
+  input {
+    width: 60%;
+  }
+}
+.fas {
+  margin: 0.5rem;
+  :hover {
+    cursor: pointer;
+  }
+  @include ButtonDown;
+  @include ButtonUp;
+}
+.table {
+  td,
+  th {
+    background-color: $background-color !important;
+  }
+}
+.pagination-controls {
+  @include RowJustifyCenterFlexbox;
+  gap: 2rem;
+  align-content: center;
+  margin: 2rem 0;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.modal-content {
+  background-color: $background-color;
+  @include Padding2rem;
+  // border-radius: 8px;
+  width: 60rem;
+  @include BoxShadow;
+  @include ColJustifyStartFlexbox;
+  > form,
+  input,
+  textarea {
+    width: 100%;
+  }
+}
+.modal-actions {
+  @include RowJustifyStartFlexbox;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+button {
+  margin-right: 10px;
+}
+
+th span {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #ccc; /* Default light color for triangles */
+}
+
+th span span.active {
+  color: #000; /* Black color for the active triangle */
+}
+
+.index {
+  grid-column: 1 / -1;
+  @include ColJustifyCenterFlexbox;
+}
+
+//navbar grid
+.navbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  @include RowJustifyCenterFlexbox;
+  align-items: baseline;
+  gap: 2rem;
+
+  .nav-content {
+    @include RowJustifyStartFlexbox;
+    gap: 1rem;
+  }
+
+  // For widths greater than smartphone
+  @include smartphone {
+    @include RowJustifyStartFlexbox;
+    gap: 1rem;
+    align-items: baseline;
+  }
+}
+
+//banner grid
+.banner {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  @include Padding5rem;
+
+  &--message {
+    @include MarginBottom3rem;
+    @include ColJustifyCenterFlexbox;
+    &--headline {
+      @include ColJustifyStartFlexbox;
+      @include MarginBottom3rem;
+    }
+    &--subheadline {
+      max-width: 40rem;
+      @include MarginBottom3rem;
+      &--text {
+        font-size: 2.5rem;
+      }
+    }
+    .button {
+      padding: 0.3rem 3.5rem;
+    }
+  }
+  &--article {
+    @include ColJustifyStartFlexbox;
+  }
+}
+
+//signup, login, logout,
+.signup,
+.login,
+.logout,
+.profile {
+  @include Padding5rem;
+  h3 {
+    @include MarginBottom3rem;
+  }
+  grid-column: 1 / -1;
+  @include ColJustifyCenterFlexbox;
+  &--form {
+    width: 40rem;
+    @include smartphone {
+      width: auto;
+    }
+    &--input {
+      @include ColJustifyStartFlexbox;
+      @include MarginBottom2rem;
+      > p,
+      input,
+      label {
+        width: 100%;
+      }
+    }
+  }
+  // For widths greater than smartphone
+  @include smartphone {
+    @include ColJustifyCenterFlexbox;
+  }
+}
+
+//flexbox for row and column
+.row-center {
+  @include RowJustifyCenterFlexbox;
+}
+
+.row-start {
+  @include RowJustifyStartFlexbox;
+}
+
+.col-center {
+  @include ColJustifyCenterFlexbox;
+}
+
+.col-start {
+  @include ColJustifyStartFlexbox;
+}

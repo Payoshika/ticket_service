@@ -8,6 +8,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+const helmet = require("helmet");
 dotenv.config();
 
 // database connection
@@ -27,6 +28,11 @@ app.use(
     origin: ["http://localhost:4200"], // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
   })
 );
 app.use(express.json());
@@ -183,8 +189,15 @@ app.post("/api/tickets", async (req, res) => {
 
 app.get("/api/tickets", async (req, res) => {
   try {
-    const tickets = await Ticket.find();
-    res.status(200).send(tickets);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+    const totalTickets = await Ticket.countDocuments(); // Get total count of tickets
+    const tickets = await Ticket.find()
+      .sort({ _id: -1 })
+      .skip(skip)
+      .limit(limit);
+    res.status(200).send({ tickets, total: totalTickets }); // Return tickets and total count
   } catch (error) {
     res
       .status(500)
