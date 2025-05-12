@@ -130,11 +130,11 @@
       <tbody>
         <tr *ngFor="let ticket of filteredTickets; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ ticket.name }}</td>
-          <td>{{ ticket.issuerName }}</td>
-          <td>{{ ticket.description }}</td>
-          <td>{{ ticket.status }}</td>
-          <td>{{ ticket.createdAt | date : "short" }}</td>
+          <td>{{ ticket?.name }}</td>
+          <td>{{ ticket?.issuerName }}</td>
+          <td>{{ ticket?.description }}</td>
+          <td>{{ ticket?.status }}</td>
+          <td>{{ ticket?.createdAt | date : "short" }}</td>
           <td *ngIf="!isLoggedIn">
             <i class="fas fa-eye" (click)="openViewModal(ticket)"></i>
           </td>

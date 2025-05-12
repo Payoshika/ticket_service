@@ -142,6 +142,7 @@ export class TicketViewComponent implements OnInit, OnDestroy {
     }
   }
   loadTickets(): void {
+    console.log('Loading tickets...');
     if (this.isLoading || (this.totalTickets > 0 && this.tickets.length >= this.totalTickets)) return;
     this.isLoading = true;
     const url = `${environment.apiUrl}/tickets?page=${this.currentPage}&limit=${this.pageSize}`;
